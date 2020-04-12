@@ -6,6 +6,7 @@
 <body>
     <h1>ShutdownApp</h1>
     <h2>Pozostało sekund: <span id="countdown"></span></h2>
+    <input type="number" id="secondsInput">
     <button id="start">Zacznij</button>
     <button id="abort">Przerwij</button>
 
@@ -13,12 +14,11 @@
         'use strict';
         const electron = require('electron');
         const {ipcRenderer} = electron;
-        const initialTime = 3;
 
         let myInterval;
         
-        const startCountdown = () => {
-            let currentSecondsLeft = initialTime;
+        const startCountdown = (secondsFromInput) => {
+            let currentSecondsLeft = secondsFromInput;
             myInterval = setInterval(() => {
                 if (currentSecondsLeft === 0) {
                     updateTimer(currentSecondsLeft);
@@ -48,7 +48,8 @@
         startButton.addEventListener('click', (e) => {
             e.preventDefault();
             const item = startButton.innerText;
-            startCountdown();
+            const secondsFromInput = document.getElementById('secondsInput').value;
+            startCountdown(secondsFromInput);
         });
 
         const abortButton = document.getElementById('abort');
