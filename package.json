@@ -1,16 +1,37 @@
 {
   "name": "shutdown-app",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "main.js",
   "dependencies": {
-    "electron": "^8.2.1",
     "node-cmd": "^3.0.0"
   },
-  "devDependencies": {},
-  "scripts": {
-    "start": "electron ."
+  "devDependencies": {
+    "electron-builder": "^22.4.1",
+    "electron": "^8.2.1"
   },
-  "author": "",
-  "license": "ISC"
+  "scripts": {
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "author": "Ariel Kuźmiński",
+  "license": "ISC",
+  "build": {
+    "productName": "Shutdowner",
+    "appId": "scripter.Shutdowner",
+    "win": {
+      "target": [
+        "portable"
+      ]
+    },
+    "portable": {
+      "artifactName": "shutdowner_portable.exe"
+    },
+    "directories": {
+      "output": "electron/output",
+      "app": ".",
+      "buildResources": "."
+    }
+  }
 }
