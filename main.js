@@ -1,14 +1,19 @@
 const electron = require('electron');
 const url = require('url');
 const path = require('path');
+const nodeCmd = require('node-cmd');
 
-const {app, BrowserWindow, Menu} = electron;
+const {app, BrowserWindow, Menu, ipcMain} = electron;
 
 let mainWindow;
 
 // Listen for app to be ready
 app.on('ready', () => {
-    mainWindow = new BrowserWindow({});
+    mainWindow = new BrowserWindow({
+        webPreferences: {
+            nodeIntegration: true,
+        }
+    });
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'mainWindow.html'),
         protocol: 'file:',
@@ -16,8 +21,15 @@ app.on('ready', () => {
     }));
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
     Menu.setApplicationMenu(mainMenu);
-    
 });
+
+ipcMain.on('item:add', (e, item) => {
+    console.log('test');
+    nodeCmd.get('winver', (err, data, stderr) => console.log(err, data, stderr));
+    // nodeCmd.get('shutdown -s -t 00', (err, data, stderr) => console.log(err, data, stderr));
+    mainWindow.webContents.send('item:add', item);
+})
+
 const mainMenuTemplate = [
     {
         label: 'App',
