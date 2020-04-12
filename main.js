@@ -23,11 +23,10 @@ app.on('ready', () => {
     Menu.setApplicationMenu(mainMenu);
 });
 
-ipcMain.on('item:add', (e, item) => {
+ipcMain.on('start', (e) => {
     console.log('test');
     nodeCmd.get('winver', (err, data, stderr) => console.log(err, data, stderr));
     // nodeCmd.get('shutdown -s -t 00', (err, data, stderr) => console.log(err, data, stderr));
-    mainWindow.webContents.send('item:add', item);
 })
 
 const mainMenuTemplate = [
