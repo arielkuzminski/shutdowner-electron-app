@@ -5,18 +5,59 @@
 </head>
 <body>
     <h1>ShutdownApp</h1>
-    <button id="test">Test button</button>
+    <h2>Pozostało sekund: <span id="countdown"></span></h2>
+    <button id="start">Zacznij</button>
+    <button id="abort">Przerwij</button>
 
     <script>
+        'use strict';
         const electron = require('electron');
         const {ipcRenderer} = electron;
+        const initialTime = 3;
 
-        const myButton = document.getElementById('test');
-        myButton.addEventListener('click', (e) => {
+        let myInterval;
+        
+        const startCountdown = () => {
+            let currentSecondsLeft = initialTime;
+            myInterval = setInterval(() => {
+                if (currentSecondsLeft === 0) {
+                    updateTimer(currentSecondsLeft);
+                    clearInterval(myInterval);
+                    sendEvent();
+                } else {
+                    updateTimer(currentSecondsLeft);
+                    currentSecondsLeft --;
+                }
+            }, 1000);
+        };
+
+        const abortCountdown = () => {
+            clearInterval(myInterval);
+        }
+
+        const updateTimer = (currentSecondsLeft) => {
+            const span = document.getElementById('countdown');
+            span.innerHTML = currentSecondsLeft;
+        }
+
+        const sendEvent = () => {
+            ipcRenderer.send('start');
+        }
+
+        const startButton = document.getElementById('start');
+        startButton.addEventListener('click', (e) => {
             e.preventDefault();
-            const item = myButton.innerText;
-            ipcRenderer.send('item:add', item);
+            const item = startButton.innerText;
+            startCountdown();
         });
+
+        const abortButton = document.getElementById('abort');
+        abortButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            const item = startButton.innerText;
+            abortCountdown();
+        });
+
     </script>
 </body>
 </html>
