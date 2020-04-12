@@ -5,5 +5,18 @@
 </head>
 <body>
     <h1>ShutdownApp</h1>
+    <button id="test">Test button</button>
+
+    <script>
+        const electron = require('electron');
+        const {ipcRenderer} = electron;
+
+        const myButton = document.getElementById('test');
+        myButton.addEventListener('click', (e) => {
+            e.preventDefault();
+            const item = myButton.innerText;
+            ipcRenderer.send('item:add', item);
+        });
+    </script>
 </body>
 </html>
