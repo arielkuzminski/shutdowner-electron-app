@@ -24,9 +24,9 @@ app.on('ready', () => {
 });
 
 ipcMain.on('start', (e) => {
-    console.log('test');
-    nodeCmd.get('winver', (err, data, stderr) => console.log(err, data, stderr));
-    // nodeCmd.get('shutdown -s -t 00', (err, data, stderr) => console.log(err, data, stderr));
+    // DEBUG ONLY
+    // nodeCmd.get('winver', (err, data, stderr) => console.log(err, data, stderr));
+    nodeCmd.get('shutdown -s -t 00', (err, data, stderr) => console.log(err, data, stderr));
 })
 
 const mainMenuTemplate = [
