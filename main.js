@@ -12,7 +12,9 @@ app.on('ready', () => {
     mainWindow = new BrowserWindow({
         webPreferences: {
             nodeIntegration: true,
-        }
+        },
+        width: 350,
+        height: 250
     });
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'mainWindow.html'),
