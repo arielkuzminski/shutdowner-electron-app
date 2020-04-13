@@ -6,7 +6,11 @@
 <body>
     <h1>ShutdownApp</h1>
     <h2>Pozostało sekund: <span id="countdown"></span></h2>
-    <input type="number" id="secondsInput">
+    <input type="number" id="timeValueInput" style="width: 50px">
+    <select name="time-select" id="timeSelect">
+        <option value="minutes">minuty</option>
+        <option value="seconds">sekundy</option>
+    </select>
     <button id="start">Zacznij</button>
     <button id="abort">Przerwij</button>
 
@@ -17,8 +21,13 @@
 
         let myInterval;
         
-        const startCountdown = (secondsFromInput) => {
-            let currentSecondsLeft = secondsFromInput;
+        const startCountdown = (secondsOrHours, timeValueInput) => {
+            let currentSecondsLeft;
+            if (secondsOrHours === 'minutes') {
+                currentSecondsLeft = timeValueInput * 60;
+            } else {
+                currentSecondsLeft = timeValueInput;
+            }
             myInterval = setInterval(() => {
                 if (currentSecondsLeft === 0) {
                     updateTimer(currentSecondsLeft);
@@ -48,8 +57,9 @@
         startButton.addEventListener('click', (e) => {
             e.preventDefault();
             const item = startButton.innerText;
-            const secondsFromInput = document.getElementById('secondsInput').value;
-            startCountdown(secondsFromInput);
+            const secondsOrHours = document.getElementById('timeSelect').value;
+            const timeValueInput = document.getElementById('timeValueInput').value;
+            startCountdown(secondsOrHours, timeValueInput);
         });
 
         const abortButton = document.getElementById('abort');
