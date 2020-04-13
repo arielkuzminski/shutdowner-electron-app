@@ -5,7 +5,7 @@
 </head>
 <body>
     <h1>ShutdownApp</h1>
-    <h2>Pozostało sekund: <span id="countdown"></span></h2>
+    <h2>Pozostało: <span id="countdownMinutes"></span> minut <span id="countdownSeconds"></span> sekund.</h2>
     <input type="number" id="timeValueInput" style="width: 50px">
     <select name="time-select" id="timeSelect">
         <option value="minutes">minuty</option>
@@ -45,8 +45,12 @@
         }
 
         const updateTimer = (currentSecondsLeft) => {
-            const span = document.getElementById('countdown');
-            span.innerHTML = currentSecondsLeft;
+            const spanMinutes = document.getElementById('countdownMinutes');
+            const spanSeconds = document.getElementById('countdownSeconds');
+            const minutes = Math.floor(currentSecondsLeft / 60);
+            const seconds = (currentSecondsLeft % 60);
+            spanMinutes.innerHTML = minutes;
+            spanSeconds.innerHTML = seconds;
         }
 
         const sendEvent = () => {
