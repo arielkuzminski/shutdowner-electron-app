@@ -6,15 +6,17 @@
     <title>ShutdownApp</title>
 </head>
 <body>
-    <h1>ShutdownApp</h1>
-    <h2 id="time-left" style="display: none;">Pozostało: <span id="countdownMinutes"></span> minut <span id="countdownSeconds"></span> sekund.</h2>
-    <input type="number" id="timeValueInput" style="width: 50px" min="1">
+    <progress class="progress" id="progress" value="15" max="100"></progress>
+    <h1 class="title">ShutdownApp</h1>
+    <h2 class="subtitle" id="time-left">Pozostało: <span id="countdownMinutes"></span> minut <span id="countdownSeconds"></span> sekund.</h2>
+    <input type="number" id="timeValueInput" min="1">
     <select name="time-select" id="timeSelect">
         <option value="minutes">minuty</option>
         <option value="seconds">sekundy</option>
     </select>
-    <button id="start">Zacznij</button>
-    <button id="abort">Przerwij</button>
+
+    <button class="button" id="start">Zacznij</button>
+    <button class="button" id="abort">Przerwij</button>
 
     <script>
         'use strict';
@@ -24,21 +26,22 @@
         let myInterval;
         
         const startCountdown = (secondsOrHours, timeValueInput) => {
-            const timeLeftDiv = documenet.getElementById('time-left').style.display = 'block';
             let currentSecondsLeft;
+            let secondsAtStart;
             if (secondsOrHours === 'minutes') {
                 currentSecondsLeft = timeValueInput * 60;
             } else {
                 currentSecondsLeft = timeValueInput;
             }
+            secondsAtStart = currentSecondsLeft;
             myInterval = setInterval(() => {
                 if (currentSecondsLeft === 0) {
-                    updateTimer(currentSecondsLeft);
+                    updateTimer(currentSecondsLeft, secondsAtStart);
                     clearInterval(myInterval);
                     sendEvent();
                 } else {
-                    updateTimer(currentSecondsLeft);
-                    currentSecondsLeft --;
+                    updateTimer(currentSecondsLeft, secondsAtStart);
+                    currentSecondsLeft--;
                 }
             }, 1000);
         };
@@ -47,13 +50,18 @@
             clearInterval(myInterval);
         }
 
-        const updateTimer = (currentSecondsLeft) => {
+        const updateTimer = (currentSecondsLeft, secondsAtStart) => {
             const spanMinutes = document.getElementById('countdownMinutes');
             const spanSeconds = document.getElementById('countdownSeconds');
+            const percentDiv = document.getElementById('percent');
+            const progress = document.getElementById('progress');
             const minutes = Math.floor(currentSecondsLeft / 60);
             const seconds = (currentSecondsLeft % 60);
             spanMinutes.innerHTML = minutes;
             spanSeconds.innerHTML = seconds;
+            const percent = Math.floor(currentSecondsLeft / secondsAtStart * 100);
+            percentDiv.innerHTML = percent;
+            progress.value = percent;
         }
 
         const sendEvent = () => {
