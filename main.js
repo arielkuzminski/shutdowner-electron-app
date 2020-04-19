@@ -14,7 +14,7 @@ app.on('ready', () => {
             nodeIntegration: true,
         },
         width: 404,
-        height: 350
+        height: 375
     });
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'mainWindow.html'),
