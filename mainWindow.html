@@ -10,7 +10,7 @@
         <div class="wrapper">
             <div class="container">
                 <h1 class="title has-text-centered">ShutdownApp</h1>
-                <h2 class="subtitle has-text-centered" id="time-left"><span id="countdownMinutes"></span> minutes <span id="countdownSeconds"></span> seconds left.</h2>
+                <h2 class="subtitle has-text-centered column" id="time-left"><span id="countdownMinutes"></span> minutes <span id="countdownSeconds"></span> seconds left.</h2>
             </div>
             <div class="container field has-text-centered">
                 <div class="field is-grouped">
@@ -67,6 +67,8 @@
                 currentSecondsLeft = timeValueInput;
             }
             secondsAtStart = currentSecondsLeft;
+            timeLeft.style.visibility = 'visible';
+            updateTimer(currentSecondsLeft, secondsAtStart);
             myInterval = setInterval(() => {
                 if (currentSecondsLeft === 0) {
                     updateTimer(currentSecondsLeft, secondsAtStart);
@@ -77,7 +79,6 @@
                     updateTimer(currentSecondsLeft, secondsAtStart);
                 }
             }, 1000);
-            timeLeft.style.visibility = 'visible';
         };
 
         const abortCountdown = () => {
@@ -87,14 +88,12 @@
         const updateTimer = (currentSecondsLeft, secondsAtStart) => {
             const spanMinutes = document.getElementById('countdownMinutes');
             const spanSeconds = document.getElementById('countdownSeconds');
-            const percentDiv = document.getElementById('percent');
             const progress = document.getElementById('progress');
             const minutes = Math.floor(currentSecondsLeft / 60);
             const seconds = (currentSecondsLeft % 60);
             spanMinutes.innerHTML = minutes;
             spanSeconds.innerHTML = seconds;
             const percent = Math.floor(currentSecondsLeft / secondsAtStart * 100);
-            percentDiv.innerHTML = percent;
             progress.value = percent;
         }
 
