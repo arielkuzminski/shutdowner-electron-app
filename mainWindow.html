@@ -6,17 +6,37 @@
     <title>ShutdownApp</title>
 </head>
 <body>
-    <progress class="progress" id="progress" value="15" max="100"></progress>
-    <h1 class="title">ShutdownApp</h1>
-    <h2 class="subtitle" id="time-left">Pozostało: <span id="countdownMinutes"></span> minut <span id="countdownSeconds"></span> sekund.</h2>
-    <input type="number" id="timeValueInput" min="1">
-    <select name="time-select" id="timeSelect">
-        <option value="minutes">minuty</option>
-        <option value="seconds">sekundy</option>
-    </select>
+    <section class="section">
+        <div class="wrapper">
+            <div class="container">
+                <h1 class="title has-text-centered">ShutdownApp</h1>
+                <h2 class="subtitle has-text-centered" id="time-left">Pozostało: <span id="countdownMinutes"></span> minut <span id="countdownSeconds"></span> sekund.</h2>
+            </div>
+            <div class="container field has-text-centered">
+                <div class="field is-grouped">
+                    <p class="control">
+                        <input class="input" type="number" placeholder="Time left" id="timeValueInput" min="1">
+                    </p>
+                    <p class="control">
+                        <span class="select">
+                            <select id="timeSelect">
+                                <option>Minutes</option>
+                                <option>Seconds</option>
+                            </select>
+                        </span>
+                    </p>
+                </div>
+            </div>
+            <div class="container field">
+                <button class="button is-success" id="start">Start</button>
+                <button class="button is-danger" id="abort">Abort</button>
+            </div>
 
-    <button class="button" id="start">Zacznij</button>
-    <button class="button" id="abort">Przerwij</button>
+        </div>
+        <div class="container field">
+            <progress class="progress" id="progress" value="15" max="100"></progress>
+        </div>
+    </section>
 
     <script>
         'use strict';
@@ -35,13 +55,14 @@
             }
             secondsAtStart = currentSecondsLeft;
             myInterval = setInterval(() => {
+                console.log(currentSecondsLeft);
                 if (currentSecondsLeft === 0) {
                     updateTimer(currentSecondsLeft, secondsAtStart);
                     clearInterval(myInterval);
                     sendEvent();
                 } else {
-                    updateTimer(currentSecondsLeft, secondsAtStart);
                     currentSecondsLeft--;
+                    updateTimer(currentSecondsLeft, secondsAtStart);
                 }
             }, 1000);
         };
@@ -85,5 +106,15 @@
         });
 
     </script>
+
+    <style>
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 10px;
+        }
+    </style>
 </body>
 </html>
