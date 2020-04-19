@@ -10,25 +10,25 @@
         <div class="wrapper">
             <div class="container">
                 <h1 class="title has-text-centered">ShutdownApp</h1>
-                <h2 class="subtitle has-text-centered" id="time-left">Pozostało: <span id="countdownMinutes"></span> minut <span id="countdownSeconds"></span> sekund.</h2>
+                <h2 class="subtitle has-text-centered" id="time-left"><span id="countdownMinutes"></span> minutes <span id="countdownSeconds"></span> seconds left.</h2>
             </div>
             <div class="container field has-text-centered">
                 <div class="field is-grouped">
                     <p class="control">
-                        <input class="input" type="number" placeholder="Time left" id="timeValueInput" min="1">
+                        <input class="input" type="number" placeholder="Time" id="timeValueInput" min=1 max=999>
                     </p>
                     <p class="control">
                         <span class="select">
                             <select id="timeSelect">
-                                <option>Minutes</option>
-                                <option>Seconds</option>
+                                <option value="minutes">Minutes</option>
+                                <option value="seconds">Seconds</option>
                             </select>
                         </span>
                     </p>
                 </div>
             </div>
             <div class="container field">
-                <button class="button is-success" id="start">Start</button>
+                <button class="button is-success" id="start" disabled>Start</button>
                 <button class="button is-danger" id="abort">Abort</button>
             </div>
 
@@ -44,6 +44,19 @@
         const {ipcRenderer} = electron;
 
         let myInterval;
+
+        const timeLeft = document.getElementById('time-left');
+        timeLeft.style.visibility = 'hidden';
+
+        const timeValueInputElement = document.getElementById('timeValueInput');
+        timeValueInputElement.addEventListener('change', () => {
+        const startButton = document.getElementById('start');
+            if (timeValueInputElement.value >= 0) {
+                startButton.disabled = false;
+            } else {
+                startButton.disabled = true;
+            }
+        });
         
         const startCountdown = (secondsOrHours, timeValueInput) => {
             let currentSecondsLeft;
@@ -54,6 +67,7 @@
                 currentSecondsLeft = timeValueInput;
             }
             secondsAtStart = currentSecondsLeft;
+            timeLeft.style.visibility = 'visible';
             myInterval = setInterval(() => {
                 console.log(currentSecondsLeft);
                 if (currentSecondsLeft === 0) {
