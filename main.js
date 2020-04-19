@@ -13,14 +13,15 @@ app.on('ready', () => {
         webPreferences: {
             nodeIntegration: true,
         },
-        width: 350,
-        height: 250
+        width: 404,
+        height: 350
     });
     mainWindow.loadURL(url.format({
         pathname: path.join(__dirname, 'mainWindow.html'),
         protocol: 'file:',
         slashes: true,
     }));
+    // mainWindow.webContents.openDevTools();
     const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
     Menu.setApplicationMenu(mainMenu);
 });
