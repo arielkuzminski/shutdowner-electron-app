@@ -108,7 +108,6 @@
         const startButton = document.getElementById('start');
         startButton.addEventListener('click', (e) => {
             e.preventDefault();
-            const item = startButton.innerText;
             const secondsOrHours = document.getElementById('timeSelect').value;
             const timeValueInput = document.getElementById('timeValueInput').value;
             startCountdown(secondsOrHours, timeValueInput);
@@ -117,7 +116,6 @@
         const abortButton = document.getElementById('abort');
         abortButton.addEventListener('click', (e) => {
             e.preventDefault();
-            const item = startButton.innerText;
             abortCountdown();
         });
 
