@@ -62,6 +62,7 @@
         });
         
         const startCountdown = (secondsOrHours, timeValueInput) => {
+            clearInterval(myInterval);
             let currentSecondsLeft;
             let secondsAtStart;
             if (secondsOrHours === 'minutes') {
