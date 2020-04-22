@@ -29,6 +29,7 @@
             </div>
             <div class="container field">
                 <button class="button is-success" id="start" disabled>Start</button>
+                <button class="button is-warning" id="pause">Pause</button>
                 <button class="button is-danger" id="abort">Abort</button>
             </div>
 
@@ -44,6 +45,10 @@
         const {ipcRenderer} = electron;
 
         let myInterval;
+
+        let toGo;
+        let isPause = false;
+        let secondsAtStart;
 
         const timeLeft = document.getElementById('time-left');
         const progressElement = document.getElementById('progress');
@@ -64,13 +69,17 @@
         const startCountdown = (secondsOrHours, timeValueInput) => {
             clearInterval(myInterval);
             let currentSecondsLeft;
-            let secondsAtStart;
-            if (secondsOrHours === 'minutes') {
-                currentSecondsLeft = timeValueInput * 60;
+            if (isPause) {
+                currentSecondsLeft = toGo;
+                isPause = false;
             } else {
-                currentSecondsLeft = timeValueInput;
+                if (secondsOrHours === 'minutes') {
+                    currentSecondsLeft = timeValueInput * 60;
+                } else {
+                    currentSecondsLeft = timeValueInput;
+                }
+                secondsAtStart = currentSecondsLeft;
             }
-            secondsAtStart = currentSecondsLeft;
             timeLeft.style.visibility = 'visible';
             progressElement.style.visibility = 'visible';
             updateTimer(currentSecondsLeft, secondsAtStart);
@@ -96,6 +105,7 @@
             const progress = document.getElementById('progress');
             const minutes = Math.floor(currentSecondsLeft / 60);
             const seconds = (currentSecondsLeft % 60);
+            toGo = currentSecondsLeft;
             spanMinutes.innerHTML = minutes;
             spanSeconds.innerHTML = seconds;
             const percent = Math.floor(currentSecondsLeft / secondsAtStart * 100);
@@ -118,6 +128,13 @@
         abortButton.addEventListener('click', (e) => {
             e.preventDefault();
             abortCountdown();
+            isPause = false;
+        });
+
+        const pauseButton = document.getElementById('pause');
+        pauseButton.addEventListener('click', () => {
+            abortCountdown();
+            isPause = true;
         });
 
     </script>
