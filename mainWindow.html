@@ -1,167 +1,185 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css">
-    <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
+  <head>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bulma@0.8.2/css/bulma.min.css"
+    />
+    <script
+      defer
+      src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
+    ></script>
     <title>ShutdownApp</title>
-</head>
-<body>
+  </head>
+  <body>
     <section class="section">
-        <div class="wrapper">
-            <div class="container">
-                <h1 class="title has-text-centered">ShutdownApp</h1>
-                <h2 class="subtitle has-text-centered column" id="time-left"><span id="countdownMinutes"></span> minutes <span id="countdownSeconds"></span> seconds left.</h2>
-            </div>
-            <div class="container field has-text-centered">
-                <div class="field is-grouped">
-                    <p class="control">
-                        <input class="input" type="number" placeholder="Time" id="timeValueInput" min="1">
-                    </p>
-                    <p class="control">
-                        <span class="select">
-                            <select id="timeSelect">
-                                <option value="minutes">Minutes</option>
-                                <option value="seconds">Seconds</option>
-                            </select>
-                        </span>
-                    </p>
-                </div>
-            </div>
-            <div class="container field">
-                <button class="button is-success" id="start" disabled>Start</button>
-                <button class="button is-warning" id="pause" disabled>Pause</button>
-                <button class="button is-danger" id="abort" disabled>Abort</button>
-            </div>
-
+      <div class="wrapper">
+        <div class="container">
+          <h1 class="title has-text-centered">ShutdownApp</h1>
+          <h2 class="subtitle has-text-centered column" id="time-left">
+            <span id="countdownMinutes"></span> minutes
+            <span id="countdownSeconds"></span> seconds left.
+          </h2>
+        </div>
+        <div class="container field has-text-centered">
+          <div class="field is-grouped">
+            <p class="control">
+              <input
+                class="input"
+                type="number"
+                placeholder="Time"
+                id="timeValueInput"
+                min="1"
+              />
+            </p>
+            <p class="control">
+              <span class="select">
+                <select id="timeSelect">
+                  <option value="minutes">Minutes</option>
+                  <option value="seconds">Seconds</option>
+                </select>
+              </span>
+            </p>
+          </div>
         </div>
         <div class="container field">
-            <progress class="progress is-warning" id="progress" value="100" max="100"></progress>
+          <button class="button is-success" id="start" disabled>Start</button>
+          <button class="button is-warning" id="pause" disabled>Pause</button>
+          <button class="button is-danger" id="abort" disabled>Abort</button>
         </div>
+      </div>
+      <div class="container field">
+        <progress
+          class="progress is-warning"
+          id="progress"
+          value="100"
+          max="100"
+        ></progress>
+      </div>
     </section>
 
     <script>
-        'use strict';
-        const electron = require('electron');
-        const {ipcRenderer} = electron;
+      "use strict";
+      const electron = require("electron");
+      const { ipcRenderer } = electron;
 
-        let myInterval;
+      let myInterval;
 
-        let toGo;
-        let isPause = false;
-        let secondsAtStart;
+      let toGo;
+      let isPause = false;
+      let secondsAtStart;
 
-        const timeLeft = document.getElementById('time-left');
-        const progressElement = document.getElementById('progress');
-        const timeValueInputElement = document.getElementById('timeValueInput');
+      const timeLeft = document.getElementById("time-left");
+      const progressElement = document.getElementById("progress");
+      const timeValueInputElement = document.getElementById("timeValueInput");
 
-        const pauseButton = document.getElementById('pause');
-        const startButton = document.getElementById('start');
-        const abortButton = document.getElementById('abort');
-        
-        timeLeft.style.visibility = 'hidden';
-        progressElement.style.visibility = 'hidden';
-        
-        timeValueInputElement.addEventListener('input', () => {
-        const startButton = document.getElementById('start');
-            if (timeValueInputElement.value > 0) {
-                startButton.disabled = false;
-            } else {
-                startButton.disabled = true;
-            }
-        });
-        
-        const startCountdown = (secondsOrHours, timeValueInput) => {
-            clearInterval(myInterval);
-            let currentSecondsLeft;
-            if (isPause) {
-                currentSecondsLeft = toGo;
-                isPause = false;
-                pauseButton.innerText = 'Pause';
-            } else {
-                if (secondsOrHours === 'minutes') {
-                    currentSecondsLeft = timeValueInput * 60;
-                } else {
-                    currentSecondsLeft = timeValueInput;
-                }
-                secondsAtStart = currentSecondsLeft;
-            }
-            pauseButton.disabled = false;
-            abortButton.disabled = false;
-            startButton.disabled = true;
-            timeLeft.style.visibility = 'visible';
-            progressElement.style.visibility = 'visible';
+      const pauseButton = document.getElementById("pause");
+      const startButton = document.getElementById("start");
+      const abortButton = document.getElementById("abort");
+
+      timeLeft.style.visibility = "hidden";
+      progressElement.style.visibility = "hidden";
+
+      timeValueInputElement.addEventListener("input", () => {
+        const startButton = document.getElementById("start");
+        if (timeValueInputElement.value > 0) {
+          startButton.disabled = false;
+        } else {
+          startButton.disabled = true;
+        }
+      });
+
+      const startCountdown = (secondsOrHours, timeValueInput) => {
+        clearInterval(myInterval);
+        let currentSecondsLeft;
+        if (isPause) {
+          currentSecondsLeft = toGo;
+          isPause = false;
+          pauseButton.innerText = "Pause";
+        } else {
+          if (secondsOrHours === "minutes") {
+            currentSecondsLeft = timeValueInput * 60;
+          } else {
+            currentSecondsLeft = timeValueInput;
+          }
+          secondsAtStart = currentSecondsLeft;
+        }
+        pauseButton.disabled = false;
+        abortButton.disabled = false;
+        startButton.disabled = true;
+        timeLeft.style.visibility = "visible";
+        progressElement.style.visibility = "visible";
+        updateTimer(currentSecondsLeft, secondsAtStart);
+        myInterval = setInterval(() => {
+          if (currentSecondsLeft === 0) {
             updateTimer(currentSecondsLeft, secondsAtStart);
-            myInterval = setInterval(() => {
-                if (currentSecondsLeft === 0) {
-                    updateTimer(currentSecondsLeft, secondsAtStart);
-                    clearInterval(myInterval);
-                    sendEvent();
-                } else {
-                    currentSecondsLeft--;
-                    updateTimer(currentSecondsLeft, secondsAtStart);
-                }
-            }, 1000);
-        };
-
-        const abortCountdown = () => {
             clearInterval(myInterval);
+            sendEvent();
+          } else {
+            currentSecondsLeft--;
+            updateTimer(currentSecondsLeft, secondsAtStart);
+          }
+        }, 1000);
+      };
+
+      const abortCountdown = () => {
+        clearInterval(myInterval);
+      };
+
+      const updateTimer = (currentSecondsLeft, secondsAtStart) => {
+        const spanMinutes = document.getElementById("countdownMinutes");
+        const spanSeconds = document.getElementById("countdownSeconds");
+        const progress = document.getElementById("progress");
+        const minutes = Math.floor(currentSecondsLeft / 60);
+        const seconds = currentSecondsLeft % 60;
+        toGo = currentSecondsLeft;
+        spanMinutes.innerHTML = minutes;
+        spanSeconds.innerHTML = seconds;
+        const percent = Math.floor((currentSecondsLeft / secondsAtStart) * 100);
+        progress.value = percent;
+      };
+
+      const sendEvent = () => {
+        ipcRenderer.send("start");
+      };
+
+      startButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        const secondsOrHours = document.getElementById("timeSelect").value;
+        const timeValueInput = document.getElementById("timeValueInput").value;
+        startCountdown(secondsOrHours, timeValueInput);
+      });
+
+      abortButton.addEventListener("click", (e) => {
+        e.preventDefault();
+        abortCountdown();
+        isPause = false;
+        pauseButton.innerText = "Pause";
+        pauseButton.disabled = true;
+        startButton.disabled = false;
+        timeLeft.style.visibility = "hidden";
+        progressElement.style.visibility = "hidden";
+      });
+
+      pauseButton.addEventListener("click", () => {
+        if (isPause) {
+          startCountdown();
+        } else {
+          abortCountdown();
+          isPause = true;
+          pauseButton.innerText = "Continue";
         }
-
-        const updateTimer = (currentSecondsLeft, secondsAtStart) => {
-            const spanMinutes = document.getElementById('countdownMinutes');
-            const spanSeconds = document.getElementById('countdownSeconds');
-            const progress = document.getElementById('progress');
-            const minutes = Math.floor(currentSecondsLeft / 60);
-            const seconds = (currentSecondsLeft % 60);
-            toGo = currentSecondsLeft;
-            spanMinutes.innerHTML = minutes;
-            spanSeconds.innerHTML = seconds;
-            const percent = Math.floor(currentSecondsLeft / secondsAtStart * 100);
-            progress.value = percent;
-        }
-
-        const sendEvent = () => {
-            ipcRenderer.send('start');
-        }
-
-        startButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            const secondsOrHours = document.getElementById('timeSelect').value;
-            const timeValueInput = document.getElementById('timeValueInput').value;
-            startCountdown(secondsOrHours, timeValueInput);
-        });
-
-        abortButton.addEventListener('click', (e) => {
-            e.preventDefault();
-            abortCountdown();
-            isPause = false;
-            pauseButton.innerText = 'Pause';
-            pauseButton.disabled = true;
-            startButton.disabled = false;
-            timeLeft.style.visibility = 'hidden';
-            progressElement.style.visibility = 'hidden';
-        });
-
-        pauseButton.addEventListener('click', () => {
-            if (isPause) {
-                startCountdown();
-            } else {
-                abortCountdown();
-                isPause = true;
-                pauseButton.innerText = 'Continue';
-            }
-        });
-
+      });
     </script>
 
     <style>
-        .wrapper {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding-bottom: 10px;
-        }
+      .wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding-bottom: 10px;
+      }
     </style>
-</body>
+  </body>
 </html>
