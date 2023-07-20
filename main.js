@@ -5,25 +5,41 @@ const nodeCmd = require('node-cmd');
 
 const {app, BrowserWindow, Menu, ipcMain} = electron;
 
-let mainWindow;
-
 // Listen for app to be ready
+
+function createWindow () {
+
+}
+
+app.whenReady().then(() => {
+    createWindow();
+
+    app.on('activate', () => {
+        if (BrowserWindow.getAllWindows().length === 0) {
+            createWindow()
+          }
+    })
+})
+
+app.on('window-all-closed', () => {
+    if (process.platform !== 'darwin') {
+      app.quit()
+    }
+  })
+
 app.on('ready', () => {
-    mainWindow = new BrowserWindow({
+    const win = new BrowserWindow({
         webPreferences: {
             nodeIntegration: true,
+            preload: path.join(__dirname, 'preload.js')
         },
         width: 404,
         height: 375
     });
-    mainWindow.loadURL(url.format({
-        pathname: path.join(__dirname, 'mainWindow.html'),
-        protocol: 'file:',
-        slashes: true,
-    }));
-    // mainWindow.webContents.openDevTools();
-    const mainMenu = Menu.buildFromTemplate(mainMenuTemplate);
-    Menu.setApplicationMenu(mainMenu);
+    win.loadFile('index.html');
+
+    // enable or disable DevTools
+    // win.webContents.openDevTools();
 });
 
 ipcMain.on('start', (e) => {
@@ -31,17 +47,3 @@ ipcMain.on('start', (e) => {
     // nodeCmd.get('winver', (err, data, stderr) => console.log(err, data, stderr));
     nodeCmd.get('shutdown -s -t 00', (err, data, stderr) => console.log(err, data, stderr));
 })
-
-const mainMenuTemplate = [
-    {
-        label: 'App',
-        submenu: [
-            {
-                label: 'Quit',
-                click() {
-                    app.quit();
-                }
-            }
-        ]
-    },
-];
