@@ -1,14 +1,14 @@
 {
   "name": "shutdown-app",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "main": "main.js",
   "dependencies": {
-    "node-cmd": "^3.0.0"
+    "node-cmd": "^4.0.0"
   },
   "devDependencies": {
-    "electron-builder": "^22.4.1",
-    "electron": "^11.5.0"
+    "electron-builder": "^23.6.0",
+    "electron": "^24.6.2"
   },
   "scripts": {
     "start": "electron .",
