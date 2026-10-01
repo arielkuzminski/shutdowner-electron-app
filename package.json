@@ -12,31 +12,38 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "pack": "npm run build && electron-builder --dir",
-    "dist": "npm run build && electron-builder"
+    "pack": "npm run build && electron-builder --win --dir",
+    "dist": "npm run build && electron-builder --win"
   },
   "author": "Ariel Kuźmiński",
   "license": "ISC",
   "build": {
     "productName": "Shutdowner",
     "appId": "scripter.Shutdowner",
-    "win": {
-      "target": [
-        "portable"
-      ]
-    },
-    "portable": {
-      "artifactName": "shutdowner_portable.exe"
-    },
-    "directories": {
-      "output": "electron/output",
-      "buildResources": "build"
-    },
     "files": [
       "dist/**",
       "static/**",
       "package.json"
-    ]
+    ],
+    "electronLanguages": [
+      "pl",
+      "en-US"
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "artifactName": "shutdowner-setup-${version}.${ext}",
+      "shortcutName": "Shutdowner"
+    },
+    "directories": {
+      "output": "electron/output",
+      "buildResources": "build"
+    }
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

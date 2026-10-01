@@ -15,8 +15,10 @@ node --test test/timer.test.ts   # single file
 npm run typecheck                # tsc --noEmit over src + test
 npm run lint                     # eslint
 npm run format                   # prettier --write
-npm run dist                     # build + electron-builder → electron/output/shutdowner_portable.exe (works from Linux/WSL)
+npm run dist                     # build + NSIS installer → electron/output/shutdowner-setup-<version>.exe
 ```
+
+`npm run dist` must run on Windows (PowerShell): the NSIS target needs `wine` on Linux/WSL. The installer replaced the old portable target on purpose. Portable re-extracts Electron on every launch, which took ~4 s to start versus 0.2 s once installed.
 
 **Never run `npm start` or the built exe without `--dry-run`.** When the countdown ends it really shuts the machine down (from WSL: the Windows host).
 
