@@ -33,7 +33,7 @@ npm run dist                     # build + NSIS installer → electron/output/sh
   - `--dry-run`.
 - `src/preload.cts` is CommonJS on purpose: sandboxed preloads can't be ESM. It exposes `window.shutdowner` (typed in `src/api.ts`) via `contextBridge`. The window runs with `contextIsolation` + `sandbox`, no `nodeIntegration`, and strict CSP.
 - `src/renderer/renderer.ts` only renders state and forwards button clicks. `static/index.html` loads the compiled `../dist/renderer/renderer.js`.
-- `src/shutdown.ts` is a copy of `node-shutdowner/src/shutdown.ts`, and `src/format.ts` is derived from its `countdown.ts`. Keep the two repos in sync when changing shutdown commands or Polish plural rules.
+- **`src/timer.ts`, `src/format.ts` and `src/shutdown.ts` are identical copies of the same files in `~/repos/node-shutdowner/src/`** ([node-shutdowner](https://github.com/arielkuzminski/node-shutdowner)). So are their tests in `test/`. Change them in both repos together. `cmp` on each pair should report no difference.
 - Imports use `.ts` extensions. `rewriteRelativeImportExtensions` turns them into `.js` in `dist/`, so the same sources run under `node --test` without a build.
 - Tests mock `setTimeout` + `Date` with `t.mock.timers`. Advance them at most one second per `tick()`, because a multi-second tick moves `Date` to the end before the callbacks run.
 - User-facing strings are in Polish.
